@@ -54,6 +54,14 @@
 
 ul {
   list-style: none;
+  text-align: center;
+}
+
+li {
+  background: white;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 #scotts-title {

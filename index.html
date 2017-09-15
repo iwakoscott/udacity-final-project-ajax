@@ -29,8 +29,8 @@
           </section>
 
           <!-- unordered list of coffeeshops -->
-          <ul class="coffeeshop-list">
-            <li></li>
+          <ul class="coffeeshop-list" data-bind="foreach: coffeeShopList">
+            <li data-bind="text: title"></li>
           </ul>
 
         </section>
