@@ -178,6 +178,7 @@ var ViewModel = function(){
 
   };
 
+  
 
 };
 
