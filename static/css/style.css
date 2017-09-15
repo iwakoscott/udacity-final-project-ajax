@@ -4,7 +4,7 @@
 
 * {
   box-sizing: border-box;
-  border-style: dotted;
+  //border-style: dotted;
 }
 
 /*
@@ -14,3 +14,8 @@
 /*
   map
 */
+
+#map {
+  width: 600px;
+  height: 600px;
+}
