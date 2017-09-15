@@ -2,9 +2,9 @@
 var initialLocations = [
   {title: "SightGlass Coffee", location: {lat: 37.776981, lng: -122.408586}},
   {title: "Blue Bottle Coffee", location: {lat: 37.776392, lng: -122.423337}},
-  {title: "Ritual Coffee", location: {lat: 37.776384, lng: -122.424173}},
+  {title: "Ritual Coffee Roasters", location: {lat: 37.776384, lng: -122.424173}},
   {title: "Four Barrel Coffee", location: {lat: 37.767010, lng: -122.421973}},
-  {title: "Réveille Coffee Co.", location: {lat: 37.761032, lng: -122.434438}}
+  {title: "Philz Coffee", location: {lat: 37.782412, lng:-122.420539}}
 ];
 
 // Render Google Maps API.
@@ -71,6 +71,7 @@ function initMap() {
       articles = data.response.docs;
       if (!articles.length){
         $('#wiki-articles').append("No NYT articles to show...");
+        return false;
       }
       for(var i = 0; i < articles.length; i++){ // for each article add a link to the infowindow
         var article = articles[i];
@@ -142,6 +143,41 @@ var ViewModel = function(){
   this.setCoffeeShop = function(clickedCoffeeShop){
       self.currentCoffeeShop(clickedCoffeeShop);
   };
+
+  // function to open left pane on click of hamburger icon
+  this.openLeftPane = function(){
+
+    $(document).ready(function(){
+      function a(){
+        var self = this;
+        $('#map').animate({width: "70%"});
+        window.setTimeout(function(){
+          $('.left-sidebar').animate({width: "30%"});
+        }, 1);
+
+        window.setTimeout(function(){
+          $(self).one('click', b);
+        }, 1000);
+      };
+
+      function b(){
+        var self = this;
+        $('.left-sidebar').animate({width: "0%"});
+        window.setTimeout(function(){
+          $('#map').animate({width: "100%"});
+        }, 1);
+
+        window.setTimeout(function(){
+          $(self).one('click', a);
+        }, 1000);
+      };
+
+      $('.fa-bars').unbind().one('click', a);
+
+    });
+
+  };
+
 
 };
 
