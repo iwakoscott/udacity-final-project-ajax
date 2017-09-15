@@ -40,15 +40,17 @@
 
 /*
   Left side-bar
+  on click set width to 30% and visibility to visible.
 */
 
 .left-sidebar {
   float: left;
-  width: 30%;
+  width: 0;
   height: 90vh;
   margin: 0;
   overflow: hidden;
   background-color: #ededed;
+  visibility: hidden;
 }
 
 ul {
@@ -71,11 +73,12 @@ ul {
 
 /*
   map
+  on click set width to 70%
 */
 
 #map {
   float: right;
   height: 90vh;
-  width: 70%;
+  width: 100%;
   margin: 0;
 }
