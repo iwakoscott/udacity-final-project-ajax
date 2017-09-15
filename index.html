@@ -30,7 +30,7 @@
 
           <!-- unordered list of coffeeshops -->
           <ul class="coffeeshop-list" data-bind="foreach: coffeeShopList">
-            <li data-bind="text: title"></li>
+            <li class="aCoffeeShop" data-bind="text: title, click: $parent.setCoffeeShop"></li>
           </ul>
 
         </section>

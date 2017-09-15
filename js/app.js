@@ -10,6 +10,7 @@ var initialLocations = [
 // Render Google Maps API.
 var map;
 var markers = [];
+var myInfoWindow;
 
 function initMap() {
   // my neighborhood of choice: San Francisco
@@ -20,6 +21,8 @@ function initMap() {
   });
 
   var largeInfoWindow = new google.maps.InfoWindow();
+  myInfoWindow = largeInfoWindow;
+
   var bounds = new google.maps.LatLngBounds();
 
   for (var i = 0; i < initialLocations.length; i++){
@@ -119,8 +122,8 @@ function initMap() {
 
 // CoffeeShop Object
 var coffeeShop = function(data){
-  this.title = data.title;
-  this.location = data.location;
+  this.title = ko.observable(data.title);
+  this.location = ko.observable(data.location);
 };
 
 
@@ -137,11 +140,23 @@ var ViewModel = function(){
     self.coffeeShopList.push(new coffeeShop(shopData));
   });
 
-  this.currentCoffeeShop = this.coffeeShopList()[0];
+  this.currentCoffeeShop = ko.observable(this.coffeeShopList()[0]);
 
   // Function to set and highlight coffee shop of choice.
   this.setCoffeeShop = function(clickedCoffeeShop){
       self.currentCoffeeShop(clickedCoffeeShop);
+
+      // TODO: Get Marker for Coffee Shop
+      var location = clickedCoffeeShop.location;
+      for (var i = 0; i < markers.length; i++) {
+        var marker = markers[i];
+        if (JSON.stringify(location) == JSON.stringify(marker.location)){
+          console.log(marker);
+          break;
+        }
+      }
+      // TODO: Open InfoWindow for that Coffee Shop
+      myInfoWindow.open(map, marker);
   };
 
   // function to open left pane on click of hamburger icon
@@ -178,7 +193,7 @@ var ViewModel = function(){
 
   };
 
-  
+
 
 };
 

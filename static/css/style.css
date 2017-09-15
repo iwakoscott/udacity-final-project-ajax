@@ -57,11 +57,17 @@ ul {
   text-align: center;
 }
 
-li {
+.aCoffeeShop {
   background: white;
   margin: 20px;
   padding: 20px;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+.aCoffeeShop:hover {
+  background: black;
+  color: white;
 }
 
 #scotts-title {
