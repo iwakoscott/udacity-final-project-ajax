@@ -13,9 +13,10 @@ var markers = [];
 
 function initMap() {
   // my neighborhood of choice: San Francisco
+  // Modified version of work used in class
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.778673, lng:-122.406446},
-    zoom: 14
+    zoom: 13
   });
 
   var largeInfoWindow = new google.maps.InfoWindow();
@@ -68,7 +69,10 @@ function initMap() {
     var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
     $.getJSON(nytimesUrl, function(data){
       articles = data.response.docs;
-      for(var i = 0; i < articles.length; i++){
+      if (!articles.length){
+        $('#wiki-articles').append("No NYT articles to show...");
+      }
+      for(var i = 0; i < articles.length; i++){ // for each article add a link to the infowindow
         var article = articles[i];
         $('#nyt-articles').append('<li><a href="'+ article.web_url +'">' + article.headline.main + '</a></li>');
       }
@@ -81,7 +85,7 @@ function initMap() {
       dataType: "jsonp",
       success: function(response){
         var articleList = response[1];
-        if (articleList.length === 0) {
+        if (!articleList.length) {
           $('#wiki-articles').append("No Wikipedia articles to show...")
         }
         for (var i = 0; i < articleList.length; i++){
