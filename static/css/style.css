@@ -4,15 +4,22 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Rubik', sans-serif;
 }
 
 /*
   top
 */
 
+.top {
+  background-color: #ededed;
+}
+
 #main-title {
   text-align: center;
-  margin: 0 auto;
+  margin: 0;
   margin-left: 50px;
   padding: 10px;
 }
@@ -23,6 +30,7 @@
   padding: 10px;
   margin: 0 auto;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .fa-bars:hover {
@@ -34,11 +42,40 @@
   Left side-bar
 */
 
+.left-sidebar {
+  float: left;
+  width: 30%;
+  height: 90vh;
+  margin: 0;
+  overflow: hidden;
+  background-color: #ededed;
+}
+
+ul {
+  list-style: none;
+}
+
+#scotts-title {
+  text-align: center;
+  margin: 10px;
+}
+
+.key-input {
+  width: 65%;
+}
+
+.click-input {
+  width: 30%;
+  cursor: pointer;
+}
+
 /*
   map
 */
 
 #map {
-  height: 600px;
-  width: 100%;
+  float: right;
+  height: 90vh;
+  width: 70%;
+  margin: 0;
 }
