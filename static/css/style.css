@@ -4,7 +4,30 @@
 
 * {
   box-sizing: border-box;
-  //border-style: dotted;
+}
+
+/*
+  top
+*/
+
+#main-title {
+  text-align: center;
+  margin: 0 auto;
+  margin-left: 50px;
+  padding: 10px;
+}
+
+.fa-bars {
+  position: fixed;
+  font-size: 30px;
+  padding: 10px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.fa-bars:hover {
+  background-color: black;
+  color: white;
 }
 
 /*
