@@ -12,6 +12,68 @@ var map;
 var markers = [];
 var myInfoWindow;
 
+function toggleBounce(){
+  // Got help from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+  if (this.getAnimation() !== null){
+    this.setAnimation(null);
+  } else {
+    this.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}
+
+function populateInfoWindow(marker, infowindow){
+  if (infowindow.marker != marker) {
+    infowindow.marker = marker;
+    infowindow.setContent(
+      '<h1 class="marker-title">' + marker.title + '</h1>' +
+      '<p>' + 'Wikipedia Articles to Consider:' + '</p>' +
+      '<ul id="wiki-articles"></ul>' +
+      '<p>' + 'NYT Articles to Consider:' + '</p>' +
+      '<ul id="nyt-articles"></ul>'
+  );
+
+  // NYT API
+  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+  $.getJSON(nytimesUrl, function(data){
+    articles = data.response.docs;
+    if (!articles.length){
+      $('#wiki-articles').append("No NYT articles to show...");
+      return false;
+    }
+    for(var i = 0; i < articles.length; i++){ // for each article add a link to the infowindow
+      var article = articles[i];
+      $('#nyt-articles').append('<li><a href="'+ article.web_url +'">' + article.headline.main + '</a></li>');
+    }
+  });
+
+  // Wikipedia API
+  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  $.ajax({
+    url: wikiUrl,
+    dataType: "jsonp",
+    success: function(response){
+      var articleList = response[1];
+      if (!articleList.length) {
+        $('#wiki-articles').append("No Wikipedia articles to show...")
+      }
+      for (var i = 0; i < articleList.length; i++){
+        articleStr = articleList[i];
+        var url = "http://en.wikipedia.org/wiki/" + articleStr;
+        $('#wiki-articles').append('<li><a href="'+ url +'">' + articleStr + '</a></li>');
+      }
+    }
+  });
+
+    infowindow.open(map, marker);
+    infowindow.addListener('closeclick', function(){
+      //infowindow.setMarker(null); I Am getting an error here?
+      if (marker.getAnimation() !== null){
+        marker.setAnimation(null);
+      }
+    });
+  }
+}
+
 function initMap() {
   // my neighborhood of choice: San Francisco
   // Modified version of work used in class
@@ -57,67 +119,6 @@ function initMap() {
       });
   }
 
-  function populateInfoWindow(marker, infowindow){
-    if (infowindow.marker != marker) {
-      infowindow.marker = marker;
-      infowindow.setContent(
-        '<h1 class="marker-title">' + marker.title + '</h1>' +
-        '<p>' + 'Wikipedia Articles to Consider:' + '</p>' +
-        '<ul id="wiki-articles"></ul>' +
-        '<p>' + 'NYT Articles to Consider:' + '</p>' +
-        '<ul id="nyt-articles"></ul>'
-    );
-
-    // NYT API
-    var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
-    $.getJSON(nytimesUrl, function(data){
-      articles = data.response.docs;
-      if (!articles.length){
-        $('#wiki-articles').append("No NYT articles to show...");
-        return false;
-      }
-      for(var i = 0; i < articles.length; i++){ // for each article add a link to the infowindow
-        var article = articles[i];
-        $('#nyt-articles').append('<li><a href="'+ article.web_url +'">' + article.headline.main + '</a></li>');
-      }
-    });
-
-    // Wikipedia API
-    var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
-    $.ajax({
-      url: wikiUrl,
-      dataType: "jsonp",
-      success: function(response){
-        var articleList = response[1];
-        if (!articleList.length) {
-          $('#wiki-articles').append("No Wikipedia articles to show...")
-        }
-        for (var i = 0; i < articleList.length; i++){
-          articleStr = articleList[i];
-          var url = "http://en.wikipedia.org/wiki/" + articleStr;
-          $('#wiki-articles').append('<li><a href="'+ url +'">' + articleStr + '</a></li>');
-        }
-      }
-    });
-
-      infowindow.open(map, marker);
-      infowindow.addListener('closeclick', function(){
-        //infowindow.setMarker(null); I Am getting an error here?
-        if (marker.getAnimation() !== null){
-          marker.setAnimation(null);
-        }
-      });
-    }
-  }
-
-  function toggleBounce(){
-    // Got help from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
-    if (this.getAnimation() !== null){
-      this.setAnimation(null);
-    } else {
-      this.setAnimation(google.maps.Animation.BOUNCE);
-    }
-  }
 }
 
 // CoffeeShop Object
@@ -144,19 +145,34 @@ var ViewModel = function(){
 
   // Function to set and highlight coffee shop of choice.
   this.setCoffeeShop = function(clickedCoffeeShop){
+
+      // make sure animations are not toggled
+      markers.forEach(function(marker){
+        marker.setAnimation(null);
+      });
+
       self.currentCoffeeShop(clickedCoffeeShop);
 
       // TODO: Get Marker for Coffee Shop
-      var location = clickedCoffeeShop.location;
+      var location = clickedCoffeeShop.location();
+
+      var locationlat = location.lat,
+          locationlng = location.lng;
+
       for (var i = 0; i < markers.length; i++) {
+
         var marker = markers[i];
-        if (JSON.stringify(location) == JSON.stringify(marker.location)){
-          console.log(marker);
-          break;
+
+        var markerlat = marker.position.lat(),
+            markerlng = parseFloat(marker.position.lng().toPrecision(9));
+
+        if (locationlat == markerlat && locationlng == markerlng){
+          populateInfoWindow(marker, myInfoWindow);
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+          return;
         }
+
       }
-      // TODO: Open InfoWindow for that Coffee Shop
-      myInfoWindow.open(map, marker);
   };
 
   // function to open left pane on click of hamburger icon
