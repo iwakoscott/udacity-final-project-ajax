@@ -16,6 +16,24 @@ var coffeeShop(data){
 
 // Basic ViewModel
 var ViewModel = function(){
+  var self = this;
+
+  // list of coffee shop objects
+  this.coffeeShopList = ko.observable([]);
+
+  // for each datum in initialLocations feed that data into the coffeeShop
+  // constructor and push into a list.
+  initialLocations.forEach(function(shopData){
+    self.coffeeShopList.push(new coffeeShop(shopData));
+  });
+
+  this.currentCoffeeShop = this.coffeeShopList()[0];
+
+  // Function to set and highlight coffee shop of choice.
+  this.setCoffeeShop = function(clickedCoffeeShop){
+      self.currentCoffeeShop(clickedCoffeeShop);
+  };
+
 
 };
 
