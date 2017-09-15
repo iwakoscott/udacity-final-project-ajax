@@ -7,6 +7,12 @@ var initialLocations = [
   {title: "Réveille Coffee Co.", location: {lat: 37.761032, lng: -122.434438}}
 ];
 
+// CoffeeShop Object
+var coffeeShop(data){
+  this.title = data.title;
+  this.location = data.location;
+}
+
 
 // Basic ViewModel
 var ViewModel = function(){
