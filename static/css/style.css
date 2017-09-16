@@ -64,6 +64,7 @@
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 5px 5px 10px grey;
+  min-width: 20px;
 }
 
 .aCoffeeShop:hover {
@@ -85,6 +86,11 @@
   cursor: pointer;
 }
 
+.click-input:hover {
+  background-color: black;
+  color: white;
+}
+
 /*
   map
   on click set width to 70%
@@ -97,4 +103,16 @@
   margin: 0;
 
   position: fixed;
+}
+
+@media screen and (min-width: 300px) {
+  .aCoffeeShop {
+    font-size: 10px;
+  }
+}
+
+@media screen and (min-width: 520px) {
+  .aCoffeeShop {
+    font-size: 20px;
+  }
 }

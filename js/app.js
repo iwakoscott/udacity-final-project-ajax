@@ -1,10 +1,10 @@
 // Initial Variable
 var initialLocations = [
-  {title: "SightGlass Coffee", location: {lat: 37.776981, lng: -122.408586}, show: true},
-  {title: "Blue Bottle Coffee", location: {lat: 37.776392, lng: -122.423337}, show: true},
-  {title: "Ritual Coffee Roasters", location: {lat: 37.776384, lng: -122.424173}, show: true},
-  {title: "Four Barrel Coffee", location: {lat: 37.767010, lng: -122.421973}, show: true},
-  {title: "Philz Coffee", location: {lat: 37.782412, lng:-122.420539}, show: true}
+  {id: 0, title: "SightGlass Coffee", location: {lat: 37.776981, lng: -122.408586}, show: true},
+  {id: 1, title: "Blue Bottle Coffee", location: {lat: 37.776392, lng: -122.423337}, show: true},
+  {id: 2, title: "Ritual Coffee Roasters", location: {lat: 37.776384, lng: -122.424173}, show: true},
+  {id: 3, title: "Four Barrel Coffee", location: {lat: 37.767010, lng: -122.421973}, show: true},
+  {id: 4, title: "Philz Coffee", location: {lat: 37.782412, lng:-122.420539}, show: true}
 ];
 
 // Render Google Maps API.
@@ -13,7 +13,8 @@ var markers = [];
 var myInfoWindow;
 
 function toggleBounce(){
-  // Got help from https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+  // Got help from
+  // https://developers.google.com/maps/documentation/javascript/examples/marker-animations
   if (this.getAnimation() !== null){
     this.setAnimation(null);
   } else {
@@ -33,21 +34,29 @@ function populateInfoWindow(marker, infowindow){
   );
 
   // NYT API
-  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q='
+                    + marker.title
+                    + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
   $.getJSON(nytimesUrl, function(data){
     articles = data.response.docs;
     if (!articles.length){
       $('#wiki-articles').append("No NYT articles to show...");
       return false;
     }
-    for(var i = 0; i < articles.length; i++){ // for each article add a link to the infowindow
+    for(var i = 0; i < articles.length; i++){
+      // for each article add a link to the infowindow
       var article = articles[i];
-      $('#nyt-articles').append('<li><a href="'+ article.web_url +'">' + article.headline.main + '</a></li>');
+      $('#nyt-articles').append('<li><a href="' +
+                                article.web_url +'">'
+                                + article.headline.main
+                                + '</a></li>');
     }
   });
 
   // Wikipedia API
-  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
+                + marker.title
+                + '&format=json&callback=wikiCallback';
   $.ajax({
     url: wikiUrl,
     dataType: "jsonp",
@@ -59,14 +68,15 @@ function populateInfoWindow(marker, infowindow){
       for (var i = 0; i < articleList.length; i++){
         articleStr = articleList[i];
         var url = "http://en.wikipedia.org/wiki/" + articleStr;
-        $('#wiki-articles').append('<li><a href="'+ url +'">' + articleStr + '</a></li>');
+        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr
+                                  + '</a></li>');
       }
     }
   });
 
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function(){
-      
+
       //infowindow.setMarker(null); I Am getting an error here?
 
       if (marker.getAnimation() !== null){
@@ -93,9 +103,10 @@ function initMap() {
 
       var position = initialLocations[i].location;
       var title = initialLocations[i].title;
+      var id = initialLocations[i].id;
 
       var marker = new google.maps.Marker({
-        id: i,
+        id: id,
         position: position,
         map: map,
         title: title,
@@ -104,7 +115,7 @@ function initMap() {
 
       markers.push(marker);
 
-      //bounds.extend(marker.position);
+      bounds.extend(marker.position);
 
       marker.addListener('click', function(){
         populateInfoWindow(this, largeInfoWindow);
@@ -128,7 +139,7 @@ var coffeeShop = function(data){
   this.title = ko.observable(data.title);
   this.location = ko.observable(data.location);
   this.show = ko.observable(data.show);
-};
+}
 
 
 // Basic ViewModel
@@ -175,7 +186,7 @@ var ViewModel = function(){
         }
 
       }
-  };
+  }
 
   // function to open left pane on click of hamburger icon
   this.openLeftPane = function(){
@@ -191,7 +202,7 @@ var ViewModel = function(){
         window.setTimeout(function(){
           $(self).one('click', b);
         }, 1000);
-      };
+      }
 
       function b(){
         var self = this;
@@ -203,13 +214,13 @@ var ViewModel = function(){
         window.setTimeout(function(){
           $(self).one('click', a);
         }, 1000);
-      };
+      }
 
       $('.fa-bars').unbind().one('click', a);
 
     });
 
-  };
+  }
 
   // function to filter search results
   this.filterList = function(){
@@ -223,8 +234,10 @@ var ViewModel = function(){
       var title = list[i].title().toLowerCase();
       if (title.search(input) < 0){
         list[i].show(false);
+        markers[i].setMap(null);
       } else {
         list[i].show(true);
+        markers[i].setMap(map);
       }
     }
   }
