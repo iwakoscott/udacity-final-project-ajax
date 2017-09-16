@@ -15,12 +15,15 @@ var myInfoWindow;
 function toggleBounce(){
   // Got help from
   // https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+<<<<<<< HEAD
   // I didn't know how to add an animation to a marker so I looked it up on google.
-
+||||||| merged common ancestors
+=======
   for (var i = 0; i < markers.length; i++){
       markers[i].setAnimation(null);
   }
 
+>>>>>>> finishing-touches
   if (this.getAnimation() !== null){
     this.setAnimation(null);
   } else {
@@ -158,7 +161,10 @@ function initMap() {
 
       marker.addListener('click', addToMap);
       marker.addListener('click', toggleBounce);
+<<<<<<< HEAD
+
       map.addListener('click', stopAnimate);
+||||||| merged common ancestors
       map.addListener('click', function(){
         for (var i = 0; i < markers.length; i++){
           var cur = markers[i];
@@ -167,6 +173,7 @@ function initMap() {
           }
         }
       });
+=======
 
       map.addListener('click', function(){
         for (var i = 0; i < markers.length; i++){
@@ -176,6 +183,7 @@ function initMap() {
           }
         }
       });
+>>>>>>> finishing-touches
   }
 
 }
@@ -288,6 +296,9 @@ var ViewModel = function(){
     }
   };
 
+  this.mapFail = function(){
+
+  }
 };
 
 // Map error function
