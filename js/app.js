@@ -15,6 +15,10 @@ var myInfoWindow;
 function toggleBounce(){
   // Got help from
   // https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+  for (var i = 0; i < markers.length; i++){
+      markers[i].setAnimation(null);
+  }
+
   if (this.getAnimation() !== null){
     this.setAnimation(null);
   } else {
@@ -47,9 +51,8 @@ function populateInfoWindow(marker, infowindow){
       // for each article add a link to the infowindow
       var article = articles[i];
       $('#nyt-articles').append('<li><a href="' +
-                                article.web_url +'">'
-                                + article.headline.main
-                                + '</a></li>');
+                                article.web_url + '">' + article.headline.main +
+                                '</a></li>');
     }
   });
 
@@ -68,8 +71,8 @@ function populateInfoWindow(marker, infowindow){
       for (var i = 0; i < articleList.length; i++){
         articleStr = articleList[i];
         var url = "http://en.wikipedia.org/wiki/" + articleStr;
-        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr
-                                  + '</a></li>');
+        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr +
+                                  '</a></li>');
       }
     }
   });
@@ -122,6 +125,7 @@ function initMap() {
       });
 
       marker.addListener('click', toggleBounce);
+
       map.addListener('click', function(){
         for (var i = 0; i < markers.length; i++){
           var cur = markers[i];
@@ -242,7 +246,16 @@ var ViewModel = function(){
     }
   }
 
+  this.mapFail = function(){
+
+  }
 };
+
+// Map error function
+
+var mapError = function(){
+    alert("Google Maps failed to render! :(");
+}
 
 // Apply Bindings
 ko.applyBindings(new ViewModel());
