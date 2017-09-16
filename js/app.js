@@ -53,20 +53,10 @@ function populateInfoWindow(marker, infowindow){
     for(var i = 0; i < articles.length; i++){
       // for each article add a link to the infowindow
       var article = articles[i];
-<<<<<<< HEAD
-      $('#nyt-articles').append('<li><a href="' + article.web_url + '">' +
-                                article.headline.main +
-                                '</a></li>');
-||||||| merged common ancestors
-      $('#nyt-articles').append('<li><a href="' +
-                                article.web_url +'">'
-                                + article.headline.main
-                                + '</a></li>');
-=======
+
       $('#nyt-articles').append('<li><a href="' +
                                 article.web_url + '">' + article.headline.main +
                                 '</a></li>');
->>>>>>> finishing-touches
     }
   });
 
@@ -86,16 +76,9 @@ function populateInfoWindow(marker, infowindow){
       for (var i = 0; i < articleList.length; i++){
         articleStr = articleList[i];
         var url = "http://en.wikipedia.org/wiki/" + articleStr;
-<<<<<<< HEAD
-        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr +
-                                   '</a></li>');
-||||||| merged common ancestors
-        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr
-                                  + '</a></li>');
-=======
+
         $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr +
                                   '</a></li>');
->>>>>>> finishing-touches
       }
     }
   });
@@ -159,23 +142,6 @@ function initMap() {
       marker.addListener('click', addToMap);
       marker.addListener('click', toggleBounce);
       map.addListener('click', stopAnimate);
-      map.addListener('click', function(){
-        for (var i = 0; i < markers.length; i++){
-          var cur = markers[i];
-          if (cur.getAnimation() !== null){
-            cur.setAnimation(null);
-          }
-        }
-      });
-
-      map.addListener('click', function(){
-        for (var i = 0; i < markers.length; i++){
-          var cur = markers[i];
-          if (cur.getAnimation() !== null){
-            cur.setAnimation(null);
-          }
-        }
-      });
   }
 
 }
