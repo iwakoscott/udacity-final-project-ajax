@@ -15,6 +15,7 @@ var myInfoWindow;
 function toggleBounce(){
   // Got help from
   // https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+  // I didn't know how to add an animation to a marker so I looked it up on google.
   if (this.getAnimation() !== null){
     this.setAnimation(null);
   } else {
