@@ -35,9 +35,7 @@ function populateInfoWindow(marker, infowindow){
   );
 
   // NYT API
-  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q='
-                    + marker.title
-                    + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
   $.getJSON(nytimesUrl, function(data){
     articles = data.response.docs;
     if (!articles.length){
@@ -55,9 +53,8 @@ function populateInfoWindow(marker, infowindow){
   });
 
   // Wikipedia API
-  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
-                + marker.title
-                + '&format=json&callback=wikiCallback';
+  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  
   $.ajax({
     url: wikiUrl,
     dataType: "jsonp",
