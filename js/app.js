@@ -35,7 +35,10 @@ function populateInfoWindow(marker, infowindow){
   );
 
   // NYT API
-  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + marker.title + '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' +
+                    marker.title +
+                    '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+
   $.getJSON(nytimesUrl, function(data){
     articles = data.response.docs;
     if (!articles.length){
@@ -45,16 +48,17 @@ function populateInfoWindow(marker, infowindow){
     for(var i = 0; i < articles.length; i++){
       // for each article add a link to the infowindow
       var article = articles[i];
-      $('#nyt-articles').append('<li><a href="' +
-                                article.web_url +'">'
-                                + article.headline.main
-                                + '</a></li>');
+      $('#nyt-articles').append('<li><a href="' + article.web_url + '">' +
+                                article.headline.main +
+                                '</a></li>');
     }
   });
 
   // Wikipedia API
-  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
-  
+  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' +
+                 marker.title +
+                 '&format=json&callback=wikiCallback';
+
   $.ajax({
     url: wikiUrl,
     dataType: "jsonp",
@@ -97,6 +101,19 @@ function initMap() {
 
   var bounds = new google.maps.LatLngBounds();
 
+  function stopAnimate(){
+    for (var i = 0; i < markers.length; i++){
+      var cur = markers[i];
+      if (cur.getAnimation() !== null){
+        cur.setAnimation(null);
+      }
+    }
+  }
+
+  function addToMap(){
+    populateInfoWindow(this, largeInfoWindow);
+  }
+
   for (var i = 0; i < initialLocations.length; i++){
 
       var position = initialLocations[i].location;
@@ -115,19 +132,10 @@ function initMap() {
 
       bounds.extend(marker.position);
 
-      marker.addListener('click', function(){
-        populateInfoWindow(this, largeInfoWindow);
-      });
-
+      marker.addListener('click', addToMap);
       marker.addListener('click', toggleBounce);
-      map.addListener('click', function(){
-        for (var i = 0; i < markers.length; i++){
-          var cur = markers[i];
-          if (cur.getAnimation() !== null){
-            cur.setAnimation(null);
-          }
-        }
-      });
+
+      map.addListener('click', stopAnimate);
   }
 
 }
@@ -137,7 +145,7 @@ var coffeeShop = function(data){
   this.title = ko.observable(data.title);
   this.location = ko.observable(data.location);
   this.show = ko.observable(data.show);
-}
+};
 
 
 // Basic ViewModel
@@ -184,7 +192,7 @@ var ViewModel = function(){
         }
 
       }
-  }
+  };
 
   // function to open left pane on click of hamburger icon
   this.openLeftPane = function(){
@@ -218,7 +226,7 @@ var ViewModel = function(){
 
     });
 
-  }
+  };
 
   // function to filter search results
   this.filterList = function(){
@@ -238,7 +246,7 @@ var ViewModel = function(){
         markers[i].setMap(map);
       }
     }
-  }
+  };
 
 };
 
