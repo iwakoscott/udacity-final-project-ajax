@@ -65,13 +65,13 @@ function populateInfoWindow(marker, infowindow){
     success: function(response){
       var articleList = response[1];
       if (!articleList.length) {
-        $('#wiki-articles').append("No Wikipedia articles to show...")
+        $('#wiki-articles').append("No Wikipedia articles to show...");
       }
       for (var i = 0; i < articleList.length; i++){
         articleStr = articleList[i];
         var url = "http://en.wikipedia.org/wiki/" + articleStr;
-        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr
-                                  + '</a></li>');
+        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr +
+                                   '</a></li>');
       }
     }
   });
