@@ -25,12 +25,14 @@
           <!-- text input area to filter through coffee shops -->
           <section>
             <input class="key-input" type="text"/>
-            <button class="click-input">filter</button>
+            <button class="click-input" data-bind="click: filterList">filter</button>
           </section>
 
           <!-- unordered list of coffeeshops -->
           <ul class="coffeeshop-list" data-bind="foreach: coffeeShopList">
+            <!-- ko if: show-->
             <li class="aCoffeeShop" data-bind="text: title, click: $parent.setCoffeeShop"></li>
+            <!-- /ko -->
           </ul>
 
         </section>

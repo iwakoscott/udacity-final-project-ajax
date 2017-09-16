@@ -1,10 +1,10 @@
 // Initial Variable
 var initialLocations = [
-  {title: "SightGlass Coffee", location: {lat: 37.776981, lng: -122.408586}},
-  {title: "Blue Bottle Coffee", location: {lat: 37.776392, lng: -122.423337}},
-  {title: "Ritual Coffee Roasters", location: {lat: 37.776384, lng: -122.424173}},
-  {title: "Four Barrel Coffee", location: {lat: 37.767010, lng: -122.421973}},
-  {title: "Philz Coffee", location: {lat: 37.782412, lng:-122.420539}}
+  {title: "SightGlass Coffee", location: {lat: 37.776981, lng: -122.408586}, show: true},
+  {title: "Blue Bottle Coffee", location: {lat: 37.776392, lng: -122.423337}, show: true},
+  {title: "Ritual Coffee Roasters", location: {lat: 37.776384, lng: -122.424173}, show: true},
+  {title: "Four Barrel Coffee", location: {lat: 37.767010, lng: -122.421973}, show: true},
+  {title: "Philz Coffee", location: {lat: 37.782412, lng:-122.420539}, show: true}
 ];
 
 // Render Google Maps API.
@@ -125,6 +125,7 @@ function initMap() {
 var coffeeShop = function(data){
   this.title = ko.observable(data.title);
   this.location = ko.observable(data.location);
+  this.show = ko.observable(data.show);
 };
 
 
@@ -153,7 +154,6 @@ var ViewModel = function(){
 
       self.currentCoffeeShop(clickedCoffeeShop);
 
-      // TODO: Get Marker for Coffee Shop
       var location = clickedCoffeeShop.location();
 
       var locationlat = location.lat,
@@ -209,7 +209,20 @@ var ViewModel = function(){
 
   };
 
+  // function to filter search results
+  this.filterList = function(){
 
+    var input = $('.key-input').val().toLowerCase();
+    var list = this.coffeeShopList();
+    for (var i = 0; i < list.length; i++){
+      var title = list[i].title().toLowerCase();
+      if (title.search(input) < 0){
+        list[i].show(false);
+      } else {
+        list[i].show(true);
+      }
+    }
+  }
 
 };
 
