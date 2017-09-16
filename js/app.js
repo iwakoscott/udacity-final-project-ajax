@@ -66,7 +66,9 @@ function populateInfoWindow(marker, infowindow){
 
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function(){
+      
       //infowindow.setMarker(null); I Am getting an error here?
+
       if (marker.getAnimation() !== null){
         marker.setAnimation(null);
       }
@@ -102,7 +104,7 @@ function initMap() {
 
       markers.push(marker);
 
-      bounds.extend(marker.position);
+      //bounds.extend(marker.position);
 
       marker.addListener('click', function(){
         populateInfoWindow(this, largeInfoWindow);
@@ -214,6 +216,9 @@ var ViewModel = function(){
 
     var input = $('.key-input').val().toLowerCase();
     var list = this.coffeeShopList();
+
+    // for each title check to see if input is in it and show or not show
+    // depending on if search comes back true.
     for (var i = 0; i < list.length; i++){
       var title = list[i].title().toLowerCase();
       if (title.search(input) < 0){
