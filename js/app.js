@@ -69,13 +69,11 @@ function populateInfoWindow(marker, infowindow){
 
       infowindow.open(map, marker);
       infowindow.addListener('closeclick', function(){
-
-        //infowindow.setMarker(null); I Am getting an error here?
-
-        if (marker.getAnimation() !== null){
-          marker.setAnimation(null);
-        }
+        marker.setAnimation(null);
       });
+
+    } else {
+      infowindow.close();
     }
 }
 
@@ -243,12 +241,6 @@ var ViewModel = function(){
   };
 
 };
-
-// Map error function
-
-var mapError = function(){
-    alert("Google Maps failed to render! :(");
-}
 
 // Apply Bindings
 ko.applyBindings(new ViewModel());
