@@ -29,70 +29,54 @@ function toggleBounce(){
 }
 
 function populateInfoWindow(marker, infowindow){
+
+  // Temporary Loading Screen while the articles populate
+  infowindow.setContent('<h3 class="loading">Loading...</h3>');
+
+  var html = '<h1 class="marker-title">' + marker.title + '</h1>';
+
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent(
-      '<h1 class="marker-title">' + marker.title + '</h1>' +
-      '<p>' + 'Wikipedia Articles to Consider:' + '</p>' +
-      '<ul id="wiki-articles"></ul>' +
-      '<p>' + 'NYT Articles to Consider:' + '</p>' +
-      '<ul id="nyt-articles"></ul>'
-  );
 
-  // NYT API
-  var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' +
-                    marker.title +
-                    '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
+    // NYT API
+    var nytimesUrl = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' +
+                      marker.title +
+                      '&sort=newest&api-key=f012d63c93334b108dfdfab661e2faed';
 
-  $.getJSON(nytimesUrl, function(data){
-    articles = data.response.docs;
-    if (!articles.length){
-      $('#wiki-articles').append("No NYT articles to show...");
+    $.getJSON(nytimesUrl, function(data){
+      articles = data.response.docs;
+      html += '<p>NYT Articles to Consider:</p>' + '<ul>';
+      if (!articles.length){
+        html += '<li>No NYT Articles to show</li></ul>';
+        return false;
+      }
+      for(var i = 0; i < articles.length; i++){
+        // for each article add a link to the infowindow
+        var article = articles[i];
+
+        html += '<li><a href="' + article.web_url + '">' + article.headline.main +
+                '</a></li>';
+      }
+      html += '</ul>';
+
+      infowindow.setContent(html);
+
+    }).fail(function(){
+      html += '<div>NYT articles failed to load.</div>';
+      infowindow.setContent(html);
       return false;
-    }
-    for(var i = 0; i < articles.length; i++){
-      // for each article add a link to the infowindow
-      var article = articles[i];
-
-      $('#nyt-articles').append('<li><a href="' +
-                                article.web_url + '">' + article.headline.main +
-                                '</a></li>');
-    }
-  });
-
-  // Wikipedia API
-  var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' +
-                 marker.title +
-                 '&format=json&callback=wikiCallback';
-
-  $.ajax({
-    url: wikiUrl,
-    dataType: "jsonp",
-    success: function(response){
-      var articleList = response[1];
-      if (!articleList.length) {
-        $('#wiki-articles').append("No Wikipedia articles to show...");
-      }
-      for (var i = 0; i < articleList.length; i++){
-        articleStr = articleList[i];
-        var url = "http://en.wikipedia.org/wiki/" + articleStr;
-
-        $('#wiki-articles').append('<li><a href="'+ url + '">' + articleStr +
-                                  '</a></li>');
-      }
-    }
-  });
-
-    infowindow.open(map, marker);
-    infowindow.addListener('closeclick', function(){
-
-      //infowindow.setMarker(null); I Am getting an error here?
-
-      if (marker.getAnimation() !== null){
-        marker.setAnimation(null);
-      }
     });
-  }
+
+      infowindow.open(map, marker);
+      infowindow.addListener('closeclick', function(){
+
+        //infowindow.setMarker(null); I Am getting an error here?
+
+        if (marker.getAnimation() !== null){
+          marker.setAnimation(null);
+        }
+      });
+    }
 }
 
 function initMap() {
@@ -156,6 +140,11 @@ var coffeeShop = function(data){
 
 // Basic ViewModel
 var ViewModel = function(){
+
+  // grab any text in the text field
+
+  userInput = ko.observable("");
+
   var self = this;
 
   // list of coffee shop objects
@@ -236,8 +225,7 @@ var ViewModel = function(){
 
   // function to filter search results
   this.filterList = function(){
-
-    var input = $('.key-input').val().toLowerCase();
+    var input = userInput().toLowerCase();
     var list = this.coffeeShopList();
 
     // for each title check to see if input is in it and show or not show

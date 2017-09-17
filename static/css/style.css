@@ -105,6 +105,10 @@
   position: fixed;
 }
 
+.loading {
+  cursor: wait;
+}
+
 @media screen and (min-width: 300px) {
   .aCoffeeShop {
     font-size: 10px;
