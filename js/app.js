@@ -242,5 +242,11 @@ var ViewModel = function(){
 
 };
 
+// Map error
+
+function mapError(){
+  alert("Google Maps Failed to load! :(");
+}
+
 // Apply Bindings
 ko.applyBindings(new ViewModel());
